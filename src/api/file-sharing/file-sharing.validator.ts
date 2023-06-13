@@ -1,19 +1,11 @@
 import { NextFunction, Request, Response } from "express";
-import {
-  body,
-  validationResult,
-  query,
-  param,
-  header,
-  check,
-} from "express-validator";
+import { validationResult, header } from "express-validator";
 import { StatusCodes } from "http-status-codes";
 
 export const addImageValidator = () => {
   return [
     header("expiration_ts")
-      .trim()
-      .isEmpty()
+      .notEmpty()
       .withMessage("expiration_ts header should not be empty")
       .isDate()
       .withMessage("expiration_ts must be a valid header"),

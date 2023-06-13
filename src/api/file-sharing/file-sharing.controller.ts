@@ -19,7 +19,7 @@ router.get("/:file_url", (req: Request, res: Response) => {
 });
 router.post(
   "/file",
-  addImageValidator,
+  addImageValidator(),
   uploadMiddleware.single("myImage"),
   (req: Request, res: Response) => {
     try {
