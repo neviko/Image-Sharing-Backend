@@ -1,37 +1,45 @@
 import express, { Request, Response } from "express";
-import { uploadMiddleware } from "./file-sharing.middleware";
-import path from "path";
+import { multerMiddleware } from "./file-sharing.middleware";
 import { BASE_URL } from "../../common/constants/http";
-import { addExpiration } from "./file-sharing.service";
+import { addExpiration, getImagePath } from "./file-sharing.service";
 import { StatusCodes } from "http-status-codes";
 import { addImageValidator } from "./file-sharing.validator";
+import { ErrorMessages } from "../../common/constants/errorMessages";
 
 const router = express.Router();
+router.get("/sharing"),
+  (req: Request, res: Response) => {
+    res.send({ nevo: "nev" });
+  };
 
 router.get("/:file_url", (req: Request, res: Response) => {
-  const imagePath = path.join(
-    __dirname,
-    `../../../image/${req.params.file_url}`
-  );
-  console.log(`path - ${path}`);
+  const imagePath = getImagePath(req.params.file_url);
 
-  res.status(200).sendFile(imagePath);
+  if (!imagePath) {
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ error: ErrorMessages.imageNotExist });
+  }
+  res.status(StatusCodes.OK).sendFile(imagePath!);
 });
 router.post(
   "/file",
+  multerMiddleware.single("myImage"),
   addImageValidator(),
-  uploadMiddleware.single("myImage"),
+
   (req: Request, res: Response) => {
     try {
       const expirationTs = req.headers.expiration_ts as string;
       const fileName: string = req.file?.filename as string;
       addExpiration(fileName, expirationTs);
+      console.info(`file ${fileName} uploaded successfully`);
 
       res.status(StatusCodes.CREATED).json({ url: `${BASE_URL}/${fileName}` });
-    } catch {
-      console.error("No file uploaded!");
-
-      res.status(StatusCodes.BAD_REQUEST).send("No file uploaded!");
+    } catch (e) {
+      console.error(`${ErrorMessages.noFileUploaded}:\n${e}`);
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: ErrorMessages.noFileUploaded });
     }
   }
 );

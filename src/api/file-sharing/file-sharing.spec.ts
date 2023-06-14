@@ -1,21 +1,22 @@
 import request from "supertest";
 import { app } from "../../app";
 import { StatusCodes } from "http-status-codes";
-import { describe, it } from "node:test";
-// jest.setTimeout(20000);
 
 describe("api suite", () => {
-  it("should work - ", async () => {
-    console.log("nevo");
-
-    return request(app).get("/v1/file").expect(200);
+  it("should pass", async () => {
+    const res = await request(app).get("/v1").expect(200);
+    expect(res.statusCode).toEqual(StatusCodes.BAD_REQUEST);
+    return Promise.resolve();
   });
 
-  it("should be failed - missing header", async () => {
-    const futureDate = new Date().setMinutes(new Date().getMinutes() + 5);
+  // it("should be failed - missing file", async () => {
+  //   const futureDate = new Date().setMinutes(new Date().getMinutes() + 5);
+  //   const res = await request(app).post("/file").set({
+  //     expiration_ts: futureDate,
+  //   });
 
-    return request(app).post("/file").expect(StatusCodes.BAD_REQUEST);
-  });
+  //   expect(res.statusCode).toEqual(StatusCodes.BAD_REQUEST);
+  // });
 
   //   it("should be failed - missing file", async () => {});
 

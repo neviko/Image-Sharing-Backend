@@ -3,7 +3,6 @@ import cors from "cors";
 import { json } from "body-parser";
 import { activateRoutes } from "./routes";
 import rateLimit from "express-rate-limit";
-import { Worker } from "worker_threads";
 
 //TODO:helmet
 
@@ -25,12 +24,5 @@ app.use(limiter);
 app.use(express.urlencoded({ extended: false }));
 app.use("image", express.static("image"));
 activateRoutes();
-
-export const expirationWorker = new Worker(
-  "./src/services/expiration-worker.service.ts",
-  {
-    execArgv: ["--require", "ts-node/register"],
-  }
-);
 
 export { app };

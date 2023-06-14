@@ -6,6 +6,6 @@ import { fileSHaringRouter } from "./api/file-sharing/file-sharing.controller";
 export const activateRoutes = () => {
   app.use("/v1", fileSHaringRouter);
   app.all("*", async (req: Request, res: Response) => {
-    res.status(StatusCodes.NOT_FOUND);
+    res.status(StatusCodes.NOT_FOUND).send("endpoint not exist");
   });
 };
