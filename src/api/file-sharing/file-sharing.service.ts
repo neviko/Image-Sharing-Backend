@@ -1,4 +1,3 @@
-import { Request, Response } from "express";
 import { expirationWorker } from "../../app";
 import { IExpirationPair } from "../../common/interfaces/expiration-pair";
 
