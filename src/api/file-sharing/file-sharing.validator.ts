@@ -21,7 +21,6 @@ export const addImageValidator = () => {
       .withMessage("expiration_ts header is required"),
 
     body("myImage").custom((value, { req }) => {
-      console.log("in validator");
       if (!req.file) {
         throw new Error("Image is required");
       }
